@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Error</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        color: #d00000;
+        overflow: hidden;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .alert-title {
+        font-size: 130px;
+        font-weight: bold;
+        line-height: 1;
+        margin-bottom: 20px;
+        animation: flash 0.8s infinite alternate;
+        letter-spacing: 15px;
+    }
+
+    .warning {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+    }
+
+    .exclamation {
+        font-size: 110px;
+        font-weight: bold;
+        line-height: 1;
+        animation: flash 0.8s infinite alternate;
+    }
+
+    @keyframes flash {
+        from { opacity: 0.08; }
+        to { opacity: 1; }
+    }
+
+    .text {
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 1.5;
+        flex: 1;
+    }
+
+    .chinese {
+        margin-bottom: 12px;
+        font-size: 24px;
+        white-space: normal;
+    }
+
+    .loading-bar {
+        width: 100%;
+        height: 35px;
+        border: 3px solid #d00000;
+        padding: 3px;
+        box-sizing: border-box;
+        display: flex;
+        gap: 3px;
+        margin-top: 50px;
+    }
+
+    .segment {
+        flex: 1;
+        background: white;
+    }
+
+    .segment.filled {
+        background: #d00000;
+    }
+
+    .percentage {
+        margin-top: 15px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .jargon-container {
+        margin-top: 25px;
+        height: 120px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .jargon-line {
+        font-size: 18px;
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .jargon-line:nth-child(1) { opacity: 1; transform: scale(1); }
+    .jargon-line:nth-child(2) { opacity: 0.65; transform: scale(0.98); }
+    .jargon-line:nth-child(3) { opacity: 0.35; transform: scale(0.95); }
+    .jargon-line:nth-child(4) { opacity: 0.15; transform: scale(0.92); }
+    .jargon-line:nth-child(n+5) { opacity: 0; display: none; }
+</style>
+</head>
+
+<body>
+
+<!-- Using LOCAL files for 100% reliability -->
+<audio id="sirenSound" src="siren.mp3" loop></audio>
+<audio id="chineseMusic" src="music.mp3" loop></audio>
+
+<div class="container">
+
+    <div class="alert-title" id="alertTitle">警告</div>
+
+    <div class="warning">
+        <div class="exclamation">!</div>
+        <div class="text">
+            <div class="chinese" id="chineseText">
+                您的设备正在被美帝国主义设备充电。请查阅您的手册。
+            </div>
+            <div id="englishText">
+                Your device is being charged by american imperial device. Please consult your manual.
+            </div>
+        </div>
+        <div class="exclamation">!</div>
+    </div>
+
+    <div class="loading-bar" id="loadingBar"></div>
+    <div class="percentage" id="percentage">0%</div>
+    
+    <div class="jargon-container" id="jargonContainer"></div>
+
+</div>
+
+<script>
+    /* =========================
+       LOADING BAR LOGIC
+       ========================= */
+
+    const totalSegments = 50;
+    const loadingBar = document.getElementById("loadingBar");
+    const percentage = document.getElementById("percentage");
+
+    for (let i = 0; i < totalSegments; i++) {
+        const segment = document.createElement("div");
+        segment.classList.add("segment");
+        loadingBar.appendChild(segment);
+    }
+
+    const segments = document.querySelectorAll(".segment");
+    const progressSteps = [ 4, 10, 16, 23, 29, 37, 43, 51, 58, 64, 71, 77, 84, 91, 96, 100 ];
+    let currentStep = 0;
+
+    function updateLoading() {
+        if (currentStep >= progressSteps.length) return;
+        
+        const progress = progressSteps[currentStep];
+        percentage.textContent = progress + "%";
+        const filledSegments = Math.floor((progress / 100) * totalSegments);
+
+        segments.forEach((segment, index) => {
+            if (index < filledSegments) {
+                segment.classList.add("filled");
+            } else {
+                segment.classList.remove("filled");
+            }
+        });
+
+        currentStep++;
+        
+        if (currentStep < progressSteps.length) {
+            setTimeout(updateLoading, 5500);
+        }
+    }
+
+    /* =========================
+       TECHNICAL JARGON TICKER
+       ========================= */
+
+    const jargonMessages = [
+        "Initializing system framework... 初始化...",
+        "Bypassing security protocols... 绕过安全协议...",
+        "Extracting system firmware... 提取系统固件...",
+        "Injecting kernel modules... 注入内核模块...",
+        "Calibrating voltage regulators... 校准电压调节器...",
+        "Establishing uplink to mainframe... 建立与主机的上行链路...",
+        "Scanning biometric cache... 扫描生物识别缓存...",
+        "Overriding user constraints... 覆盖用户限制...",
+        "Synchronizing telemetry data... 同步遥测数据...",
+        "Allocating memory partitions... 分配内存分区...",
+        "Downloading drivers... 下载驱动程序..."
+    ];
+    
+    const jargonContainer = document.getElementById("jargonContainer");
+    let jargonIndex = 0;
+
+    function cycleJargon() {
+        if (jargonIndex >= jargonMessages.length) {
+            return; 
+        }
+
+        const newLine = document.createElement("div");
+        newLine.classList.add("jargon-line");
+        newLine.textContent = jargonMessages[jargonIndex];
+        
+        jargonContainer.prepend(newLine);
+        
+        if (jargonContainer.children.length > 5) {
+            jargonContainer.removeChild(jargonContainer.lastChild);
+        }
+        
+        jargonIndex++;
+
+        if (jargonIndex < jargonMessages.length) {
+            const randomDelay = Math.floor(Math.random() * 2500) + 2000;
+            setTimeout(cycleJargon, randomDelay);
+        }
+    }
+
+    /* =========================
+       AUDIO & TEXT-TO-SPEECH
+       ========================= */
+
+    let mediaStarted = false;
+    window.speechUtterances = []; 
+
+    function playSpeechLoop() {
+        const alertTitle = document.getElementById("alertTitle").innerText;
+        const chineseText = document.getElementById("chineseText").innerText;
+        const englishText = document.getElementById("englishText").innerText;
+
+        const fullChineseSpeech = alertTitle + "。 " + chineseText;
+
+        const utteranceZH = new SpeechSynthesisUtterance(fullChineseSpeech);
+        const utteranceEN = new SpeechSynthesisUtterance(englishText);
+
+        utteranceZH.lang = 'zh-CN';
+        utteranceZH.rate = 0.85;
+
+        utteranceEN.lang = 'en-US';
+        utteranceEN.rate = 0.85;
+        
+        window.speechUtterances = [utteranceZH, utteranceEN];
+
+        utteranceZH.onend = () => {
+            window.speechSynthesis.speak(utteranceEN);
+        };
+
+        utteranceEN.onend = () => {
+            setTimeout(playSpeechLoop, 3000);
+        };
+
+        window.speechSynthesis.speak(utteranceZH);
+    }
+
+    function startMedia() {
+        if (mediaStarted) return;
+        mediaStarted = true;
+
+        // 1. Enter Fullscreen Mode
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(e => {
+                console.log("Fullscreen request failed:", e);
+            });
+        }
+
+        // 2. Play Siren
+        const siren = document.getElementById("sirenSound");
+        siren.volume = 0.35; 
+        siren.play().catch(e => console.log("Siren playback failed. Make sure siren.mp3 is in the same folder."));
+
+        // 3. Play Chinese Instrumental Music
+        const music = document.getElementById("chineseMusic");
+        music.volume = 0.25; 
+        music.play().catch(e => console.log("Music playback failed. Make sure music.mp3 is in the same folder."));
+
+        // 4. Start Text-To-Speech
+        if ('speechSynthesis' in window) {
+            setTimeout(playSpeechLoop, 1000);
+        } else {
+            console.log("Text-to-Speech is not supported in this browser.");
+        }
+    }
+
+    /* =========================
+       INITIALIZATION
+       ========================= */
+
+    window.onload = () => {
+        updateLoading();
+        cycleJargon();
+
+        document.body.addEventListener('click', startMedia, { once: true });
+        document.body.addEventListener('keydown', startMedia, { once: true });
+    };
+</script>
+
+</body>
+</html>
