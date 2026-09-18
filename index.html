@@ -121,9 +121,9 @@
 
 <body>
 
-<!-- Using LOCAL files for 100% reliability -->
+<!-- Using LOCAL files for 100% reliability, both set to loop -->
 <audio id="sirenSound" src="siren.mp3" loop></audio>
-<audio id="chineseMusic" src="music.mp3" loop></audio>
+<audio id="loopMusic" src="loop.mp3" loop></audio>
 
 <div class="container">
 
@@ -286,10 +286,10 @@
         siren.volume = 0.35; 
         siren.play().catch(e => console.log("Siren playback failed. Make sure siren.mp3 is in the same folder."));
 
-        // 3. Play Chinese Instrumental Music
-        const music = document.getElementById("chineseMusic");
+        // 3. Play Looped Music
+        const music = document.getElementById("loopMusic");
         music.volume = 0.25; 
-        music.play().catch(e => console.log("Music playback failed. Make sure music.mp3 is in the same folder."));
+        music.play().catch(e => console.log("Music playback failed. Make sure loop.mp3 is in the same folder."));
 
         // 4. Start Text-To-Speech
         if ('speechSynthesis' in window) {
