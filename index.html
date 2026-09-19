@@ -283,12 +283,12 @@
 
         // 2. Play Siren (Volume lowered to 10%)
         const siren = document.getElementById("sirenSound");
-        siren.volume = 0.10; 
+        siren.volume = 0.05; 
         siren.play().catch(e => console.log("Siren playback failed. Make sure siren.mp3 is in the same folder."));
 
         // 3. Play Looped Music (Volume raised to 85%)
         const music = document.getElementById("loopMusic");
-        music.volume = 1.2; 
+        music.volume = 1.5; 
         music.play().catch(e => console.log("Music playback failed. Make sure loop.mp3 is in the same folder."));
 
         // 4. Start Text-To-Speech
