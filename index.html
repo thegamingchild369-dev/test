@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,19 +112,37 @@
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-    .jargon-line:nth-child(1) { opacity: 1; transform: scale(1); }
-    .jargon-line:nth-child(2) { opacity: 0.65; transform: scale(0.98); }
-    .jargon-line:nth-child(3) { opacity: 0.35; transform: scale(0.95); }
-    .jargon-line:nth-child(4) { opacity: 0.15; transform: scale(0.92); }
-    .jargon-line:nth-child(n+5) { opacity: 0; display: none; }
+    .jargon-line:nth-child(1) {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .jargon-line:nth-child(2) {
+        opacity: 0.65;
+        transform: scale(0.98);
+    }
+
+    .jargon-line:nth-child(3) {
+        opacity: 0.35;
+        transform: scale(0.95);
+    }
+
+    .jargon-line:nth-child(4) {
+        opacity: 0.15;
+        transform: scale(0.92);
+    }
+
+    .jargon-line:nth-child(n+5) {
+        opacity: 0;
+        display: none;
+    }
 </style>
 </head>
 
 <body>
 
-<!-- Local files set to loop -->
-<audio id="sirenSound" src="siren.mp3" loop></audio>
-<audio id="loopMusic" src="loop.mp3" loop></audio>
+<audio id="sirenSound" src="siren.mp3" loop preload="auto"></audio>
+<audio id="loopMusic" src="loop.mp3" loop preload="auto"></audio>
 
 <div class="container">
 
@@ -131,187 +150,276 @@
 
     <div class="warning">
         <div class="exclamation">!</div>
+
         <div class="text">
             <div class="chinese" id="chineseText">
                 您的设备正在被美帝国主义设备充电。请查阅您的手册。
             </div>
+
             <div id="englishText">
                 Your device is being charged by american imperial device. Please consult your manual.
             </div>
         </div>
+
         <div class="exclamation">!</div>
     </div>
 
     <div class="loading-bar" id="loadingBar"></div>
+
     <div class="percentage" id="percentage">0%</div>
-    
+
     <div class="jargon-container" id="jargonContainer"></div>
 
 </div>
 
 <script>
-    /* =========================
-       LOADING BAR LOGIC
-       ========================= */
+const totalSegments = 50;
+const loadingBar = document.getElementById("loadingBar");
+const percentage = document.getElementById("percentage");
 
-    const totalSegments = 50;
-    const loadingBar = document.getElementById("loadingBar");
-    const percentage = document.getElementById("percentage");
+for (let i = 0; i < totalSegments; i++) {
+    const segment = document.createElement("div");
+    segment.classList.add("segment");
+    loadingBar.appendChild(segment);
+}
 
-    for (let i = 0; i < totalSegments; i++) {
-        const segment = document.createElement("div");
-        segment.classList.add("segment");
-        loadingBar.appendChild(segment);
-    }
+const segments = document.querySelectorAll(".segment");
 
-    const segments = document.querySelectorAll(".segment");
-    const progressSteps = [ 4, 10, 16, 23, 29, 37, 43, 51, 58, 64, 71, 77, 84, 91, 96, 100 ];
-    let currentStep = 0;
+const progressSteps = [
+    4, 10, 16, 23, 29, 37, 43, 51,
+    58, 64, 71, 77, 84, 91, 96, 100
+];
 
-    function updateLoading() {
-        if (currentStep >= progressSteps.length) return;
-        
-        const progress = progressSteps[currentStep];
-        percentage.textContent = progress + "%";
-        const filledSegments = Math.floor((progress / 100) * totalSegments);
+let currentStep = 0;
 
-        segments.forEach((segment, index) => {
-            if (index < filledSegments) {
-                segment.classList.add("filled");
-            } else {
-                segment.classList.remove("filled");
-            }
-        });
+function updateLoading() {
+    if (currentStep >= progressSteps.length) return;
 
-        currentStep++;
-        
-        if (currentStep < progressSteps.length) {
-            setTimeout(updateLoading, 5500);
-        }
-    }
+    const progress = progressSteps[currentStep];
 
-    /* =========================
-       TECHNICAL JARGON TICKER
-       ========================= */
+    percentage.textContent = progress + "%";
 
-    const jargonMessages = [
-        "Initializing system framework... 初始化...",
-        "Bypassing security protocols... 绕过安全协议...",
-        "Extracting system firmware... 提取系统固件...",
-        "Injecting kernel modules... 注入内核模块...",
-        "Calibrating voltage regulators... 校准电压调节器...",
-        "Establishing uplink to mainframe... 建立与主机的上行链路...",
-        "Scanning biometric cache... 扫描生物识别缓存...",
-        "Overriding user constraints... 覆盖用户限制...",
-        "Synchronizing telemetry data... 同步遥测数据...",
-        "Allocating memory partitions... 分配内存分区...",
-        "Downloading drivers... 下载驱动程序..."
-    ];
-    
-    const jargonContainer = document.getElementById("jargonContainer");
-    let jargonIndex = 0;
+    const filledSegments = Math.floor(
+        (progress / 100) * totalSegments
+    );
 
-    function cycleJargon() {
-        if (jargonIndex >= jargonMessages.length) {
-            return; 
-        }
-
-        const newLine = document.createElement("div");
-        newLine.classList.add("jargon-line");
-        newLine.textContent = jargonMessages[jargonIndex];
-        
-        jargonContainer.prepend(newLine);
-        
-        if (jargonContainer.children.length > 5) {
-            jargonContainer.removeChild(jargonContainer.lastChild);
-        }
-        
-        jargonIndex++;
-
-        if (jargonIndex < jargonMessages.length) {
-            const randomDelay = Math.floor(Math.random() * 2500) + 2000;
-            setTimeout(cycleJargon, randomDelay);
-        }
-    }
-
-    /* =========================
-       AUDIO & TEXT-TO-SPEECH (CHROME OPTIMIZED)
-       ========================= */
-
-    let mediaStarted = false;
-    window.speechUtterances = []; // Global array prevents Chrome from garbage-collecting speech
-
-    function playSpeechLoop() {
-        const alertTitle = document.getElementById("alertTitle").innerText;
-        const chineseText = document.getElementById("chineseText").innerText;
-        const englishText = document.getElementById("englishText").innerText;
-
-        const fullChineseSpeech = alertTitle + "。 " + chineseText;
-
-        const utteranceZH = new SpeechSynthesisUtterance(fullChineseSpeech);
-        const utteranceEN = new SpeechSynthesisUtterance(englishText);
-
-        utteranceZH.lang = 'zh-CN';
-        utteranceZH.rate = 0.85;
-
-        utteranceEN.lang = 'en-US';
-        utteranceEN.rate = 0.85;
-        
-        window.speechUtterances = [utteranceZH, utteranceEN];
-
-        utteranceZH.onend = () => {
-            window.speechSynthesis.speak(utteranceEN);
-        };
-
-        utteranceEN.onend = () => {
-            setTimeout(playSpeechLoop, 3000);
-        };
-
-        window.speechSynthesis.speak(utteranceZH);
-    }
-
-    function startMedia() {
-        if (mediaStarted) return;
-        mediaStarted = true;
-
-        // 1. Enter Fullscreen Mode
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen().catch(e => {
-                console.log("Fullscreen request failed:", e);
-            });
-        }
-
-        // 2. Play Siren (Very quiet background: 0.05)
-        const siren = document.getElementById("sirenSound");
-        siren.volume = 0.05; 
-        siren.play().catch(e => console.log("Siren playback failed."));
-
-        // 3. Play Looped Music (Loud and prominent: 1.0)
-        const music = document.getElementById("loopMusic");
-        music.volume = 1.0; 
-        music.play().catch(e => console.log("Music playback failed."));
-
-        // 4. Start Text-To-Speech immediately (Fixed for Chrome restrictions)
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Clear any pending speech queue
-            playSpeechLoop();
+    segments.forEach((segment, index) => {
+        if (index < filledSegments) {
+            segment.classList.add("filled");
         } else {
-            console.log("Text-to-Speech is not supported in this browser.");
+            segment.classList.remove("filled");
         }
+    });
+
+    currentStep++;
+
+    if (currentStep < progressSteps.length) {
+        setTimeout(updateLoading, 5500);
+    }
+}
+
+const jargonMessages = [
+    "Initializing system framework... 初始化...",
+    "Bypassing security protocols... 绕过安全协议...",
+    "Extracting system firmware... 提取系统固件...",
+    "Injecting kernel modules... 注入内核模块...",
+    "Calibrating voltage regulators... 校准电压调节器...",
+    "Establishing uplink to mainframe... 建立与主机的上行链路...",
+    "Scanning biometric cache... 扫描生物识别缓存...",
+    "Overriding user constraints... 覆盖用户限制...",
+    "Synchronizing telemetry data... 同步遥测数据...",
+    "Allocating memory partitions... 分配内存分区...",
+    "Downloading drivers... 下载驱动程序..."
+];
+
+const jargonContainer = document.getElementById("jargonContainer");
+let jargonIndex = 0;
+
+function cycleJargon() {
+    if (jargonIndex >= jargonMessages.length) {
+        return;
     }
 
-    /* =========================
-       INITIALIZATION
-       ========================= */
+    const newLine = document.createElement("div");
 
-    window.onload = () => {
-        updateLoading();
-        cycleJargon();
+    newLine.classList.add("jargon-line");
+    newLine.textContent = jargonMessages[jargonIndex];
 
-        document.body.addEventListener('click', startMedia, { once: true });
-        document.body.addEventListener('keydown', startMedia, { once: true });
+    jargonContainer.prepend(newLine);
+
+    if (jargonContainer.children.length > 5) {
+        jargonContainer.removeChild(jargonContainer.lastChild);
+    }
+
+    jargonIndex++;
+
+    if (jargonIndex < jargonMessages.length) {
+        const randomDelay =
+            Math.floor(Math.random() * 2500) + 2000;
+
+        setTimeout(cycleJargon, randomDelay);
+    }
+}
+
+let mediaStarted = false;
+
+window.speechUtterances = [];
+
+function playSpeechLoop() {
+    const alertTitle =
+        document.getElementById("alertTitle").innerText;
+
+    const chineseText =
+        document.getElementById("chineseText").innerText;
+
+    const englishText =
+        document.getElementById("englishText").innerText;
+
+    const fullChineseSpeech =
+        alertTitle + "。 " + chineseText;
+
+    const utteranceZH =
+        new SpeechSynthesisUtterance(fullChineseSpeech);
+
+    const utteranceEN =
+        new SpeechSynthesisUtterance(englishText);
+
+    utteranceZH.lang = "zh-CN";
+    utteranceZH.rate = 0.85;
+    utteranceZH.volume = 1;
+
+    utteranceEN.lang = "en-US";
+    utteranceEN.rate = 0.85;
+    utteranceEN.volume = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+
+    const chineseVoice = voices.find(
+        voice => voice.lang.toLowerCase().startsWith("zh")
+    );
+
+    const englishVoice = voices.find(
+        voice => voice.lang.toLowerCase().startsWith("en")
+    );
+
+    if (chineseVoice) {
+        utteranceZH.voice = chineseVoice;
+    }
+
+    if (englishVoice) {
+        utteranceEN.voice = englishVoice;
+    }
+
+    window.speechUtterances = [
+        utteranceZH,
+        utteranceEN
+    ];
+
+    utteranceZH.onend = function() {
+        setTimeout(function() {
+            window.speechSynthesis.speak(utteranceEN);
+        }, 200);
     };
+
+    utteranceEN.onend = function() {
+        setTimeout(function() {
+            playSpeechLoop();
+        }, 3000);
+    };
+
+    utteranceZH.onerror = function(event) {
+        console.error("Chinese speech error:", event);
+    };
+
+    utteranceEN.onerror = function(event) {
+        console.error("English speech error:", event);
+    };
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utteranceZH);
+}
+
+async function startMedia() {
+    if (mediaStarted) return;
+
+    mediaStarted = true;
+
+    try {
+        if (document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
+        }
+    } catch (e) {
+        console.log("Fullscreen request failed:", e);
+    }
+
+    const siren =
+        document.getElementById("sirenSound");
+
+    const music =
+        document.getElementById("loopMusic");
+
+    siren.load();
+    music.load();
+
+    siren.volume = 0.05;
+
+    try {
+        await siren.play();
+        console.log("Siren started");
+    } catch (e) {
+        console.error("Siren failed:", e);
+    }
+
+    setTimeout(async function() {
+        music.volume = 1.0;
+
+        try {
+            await music.play();
+            console.log("Music started");
+        } catch (e) {
+            console.error("Music failed:", e);
+        }
+    }, 100);
+
+    setTimeout(function() {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+
+            const voices = window.speechSynthesis.getVoices();
+
+            if (voices.length > 0) {
+                playSpeechLoop();
+            } else {
+                window.speechSynthesis.onvoiceschanged =
+                    function() {
+                        window.speechSynthesis.onvoiceschanged = null;
+                        playSpeechLoop();
+                    };
+            }
+        }
+    }, 300);
+}
+
+window.onload = function() {
+    updateLoading();
+    cycleJargon();
+
+    document.body.addEventListener(
+        "click",
+        startMedia,
+        { once: true }
+    );
+
+    document.body.addEventListener(
+        "keydown",
+        startMedia,
+        { once: true }
+    );
+};
 </script>
 
 </body>
 </html>
+```
+
+This keeps your original loading animation, jargon ticker, fullscreen, siren, music and Chinese/English speech, while making the audio and speech initialization more Chrome-friendly.
