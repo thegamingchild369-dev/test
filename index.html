@@ -121,7 +121,7 @@
 
 <body>
 
-<!-- Using LOCAL files for 100% reliability, both set to loop -->
+<!-- Local files set to loop -->
 <audio id="sirenSound" src="siren.mp3" loop></audio>
 <audio id="loopMusic" src="loop.mp3" loop></audio>
 
@@ -235,11 +235,11 @@
     }
 
     /* =========================
-       AUDIO & TEXT-TO-SPEECH
+       AUDIO & TEXT-TO-SPEECH (CHROME OPTIMIZED)
        ========================= */
 
     let mediaStarted = false;
-    window.speechUtterances = []; 
+    window.speechUtterances = []; // Global array prevents Chrome from garbage-collecting speech
 
     function playSpeechLoop() {
         const alertTitle = document.getElementById("alertTitle").innerText;
@@ -281,19 +281,20 @@
             });
         }
 
-        // 2. Play Siren (Volume lowered to 10%)
+        // 2. Play Siren (Very quiet background: 0.05)
         const siren = document.getElementById("sirenSound");
         siren.volume = 0.05; 
-        siren.play().catch(e => console.log("Siren playback failed. Make sure siren.mp3 is in the same folder."));
+        siren.play().catch(e => console.log("Siren playback failed."));
 
-        // 3. Play Looped Music (Volume raised to 85%)
+        // 3. Play Looped Music (Loud and prominent: 1.0)
         const music = document.getElementById("loopMusic");
-        music.volume = 1.5; 
-        music.play().catch(e => console.log("Music playback failed. Make sure loop.mp3 is in the same folder."));
+        music.volume = 1.0; 
+        music.play().catch(e => console.log("Music playback failed."));
 
-        // 4. Start Text-To-Speech
+        // 4. Start Text-To-Speech immediately (Fixed for Chrome restrictions)
         if ('speechSynthesis' in window) {
-            setTimeout(playSpeechLoop, 1000);
+            window.speechSynthesis.cancel(); // Clear any pending speech queue
+            playSpeechLoop();
         } else {
             console.log("Text-to-Speech is not supported in this browser.");
         }
