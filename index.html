@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -135,6 +136,103 @@
         opacity: 0;
         display: none;
     }
+
+    .technical-screen {
+        display: none;
+        width: 100%;
+        margin-top: 35px;
+        font-family: "Courier New", Courier, monospace;
+        text-align: left;
+    }
+
+    .technical-header {
+        font-size: 22px;
+        font-weight: bold;
+        border-bottom: 3px solid #d00000;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+    }
+
+    .technical-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 30px;
+        font-size: 16px;
+    }
+
+    .technical-item {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #d00000;
+        padding: 5px 0;
+    }
+
+    .technical-value {
+        font-weight: bold;
+    }
+
+    .technical-console {
+        height: 150px;
+        overflow: hidden;
+        margin-top: 15px;
+        border-top: 2px solid #d00000;
+        border-bottom: 2px solid #d00000;
+        padding: 8px 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .console-line {
+        white-space: nowrap;
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 15px;
+        background: #d00000;
+        animation: cursorBlink 0.6s infinite;
+        vertical-align: middle;
+    }
+
+    @keyframes cursorBlink {
+        0%, 49% {
+            opacity: 1;
+        }
+        50%, 100% {
+            opacity: 0;
+        }
+    }
+
+    .technical-footer {
+        margin-top: 12px;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+        .alert-title {
+            font-size: 80px;
+        }
+
+        .exclamation {
+            font-size: 70px;
+        }
+
+        .text {
+            font-size: 18px;
+        }
+
+        .chinese {
+            font-size: 17px;
+        }
+
+        .technical-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 </head>
 
@@ -169,6 +267,66 @@
 
     <div class="jargon-container" id="jargonContainer"></div>
 
+    <div class="technical-screen" id="technicalScreen">
+
+        <div class="technical-header">
+            SYSTEM DIAGNOSTIC INTERFACE // ACTIVE
+        </div>
+
+        <div class="technical-grid">
+
+            <div class="technical-item">
+                <span>CORE STATUS</span>
+                <span class="technical-value" id="coreStatus">ACTIVE</span>
+            </div>
+
+            <div class="technical-item">
+                <span>PROCESS ID</span>
+                <span class="technical-value" id="processID">---</span>
+            </div>
+
+            <div class="technical-item">
+                <span>MEMORY ADDRESS</span>
+                <span class="technical-value" id="memoryAddress">---</span>
+            </div>
+
+            <div class="technical-item">
+                <span>VOLTAGE</span>
+                <span class="technical-value" id="voltage">---</span>
+            </div>
+
+            <div class="technical-item">
+                <span>CPU LOAD</span>
+                <span class="technical-value" id="cpuLoad">---</span>
+            </div>
+
+            <div class="technical-item">
+                <span>DATA STREAM</span>
+                <span class="technical-value" id="dataStream">---</span>
+            </div>
+
+            <div class="technical-item">
+                <span>KERNEL STATE</span>
+                <span class="technical-value" id="kernelState">---</span>
+            </div>
+
+            <div class="technical-item">
+                <span>UPLINK</span>
+                <span class="technical-value" id="uplink">---</span>
+            </div>
+
+        </div>
+
+        <div class="technical-console" id="technicalConsole"></div>
+
+        <div class="technical-footer">
+            <span>SECURITY LEVEL: 09</span>
+            <span>ENCRYPTION: ACTIVE</span>
+            <span id="clock">00:00:00</span>
+        </div>
+
+    </div>
+
 </div>
 
 <script>
@@ -198,9 +356,8 @@ function updateLoading() {
 
     percentage.textContent = progress + "%";
 
-    const filledSegments = Math.floor(
-        (progress / 100) * totalSegments
-    );
+    const filledSegments =
+        Math.floor((progress / 100) * totalSegments);
 
     segments.forEach((segment, index) => {
         if (index < filledSegments) {
@@ -214,6 +371,8 @@ function updateLoading() {
 
     if (currentStep < progressSteps.length) {
         setTimeout(updateLoading, 5500);
+    } else {
+        setTimeout(startTechnicalScreen, 1000);
     }
 }
 
@@ -231,7 +390,9 @@ const jargonMessages = [
     "Downloading drivers... 下载驱动程序..."
 ];
 
-const jargonContainer = document.getElementById("jargonContainer");
+const jargonContainer =
+    document.getElementById("jargonContainer");
+
 let jargonIndex = 0;
 
 function cycleJargon() {
@@ -247,7 +408,9 @@ function cycleJargon() {
     jargonContainer.prepend(newLine);
 
     if (jargonContainer.children.length > 5) {
-        jargonContainer.removeChild(jargonContainer.lastChild);
+        jargonContainer.removeChild(
+            jargonContainer.lastChild
+        );
     }
 
     jargonIndex++;
@@ -258,6 +421,131 @@ function cycleJargon() {
 
         setTimeout(cycleJargon, randomDelay);
     }
+}
+
+const technicalMessages = [
+    ">> Establishing secure kernel communication...",
+    ">> Reading hardware configuration...",
+    ">> Validating memory partitions...",
+    ">> Synchronizing system registers...",
+    ">> Checking voltage regulation subsystem...",
+    ">> Rebuilding corrupted instruction cache...",
+    ">> Loading encrypted firmware blocks...",
+    ">> Verifying checksum 0xA7F29C...",
+    ">> Reallocating kernel memory...",
+    ">> Initializing secondary processing thread...",
+    ">> Scanning peripheral interfaces...",
+    ">> Establishing telemetry uplink...",
+    ">> Receiving encrypted data packet...",
+    ">> Packet integrity: 100%",
+    ">> Decompressing system module...",
+    ">> Applying low-level configuration...",
+    ">> Synchronization complete.",
+    ">> SYSTEM OPERATION CONTINUING..."
+];
+
+let technicalIndex = 0;
+
+function addTechnicalLine() {
+    const consoleBox =
+        document.getElementById("technicalConsole");
+
+    if (technicalIndex >= technicalMessages.length) {
+        technicalIndex = 0;
+    }
+
+    const line =
+        document.createElement("div");
+
+    line.className = "console-line";
+    line.textContent =
+        technicalMessages[technicalIndex];
+
+    consoleBox.appendChild(line);
+
+    if (consoleBox.children.length > 8) {
+        consoleBox.removeChild(
+            consoleBox.firstChild
+        );
+    }
+
+    technicalIndex++;
+
+    setTimeout(
+        addTechnicalLine,
+        Math.floor(Math.random() * 900) + 400
+    );
+}
+
+function randomHex(length) {
+    const characters = "0123456789ABCDEF";
+    let result = "0x";
+
+    for (let i = 0; i < length; i++) {
+        result += characters[
+            Math.floor(
+                Math.random() * characters.length
+            )
+        ];
+    }
+
+    return result;
+}
+
+function updateTechnicalValues() {
+    document.getElementById("processID").textContent =
+        Math.floor(Math.random() * 90000 + 10000);
+
+    document.getElementById("memoryAddress").textContent =
+        randomHex(8);
+
+    document.getElementById("voltage").textContent =
+        (Math.random() * 2 + 11).toFixed(2) + " V";
+
+    document.getElementById("cpuLoad").textContent =
+        Math.floor(Math.random() * 35 + 60) + "%";
+
+    document.getElementById("dataStream").textContent =
+        Math.floor(Math.random() * 900 + 100) + " MB/s";
+
+    document.getElementById("kernelState").textContent =
+        Math.random() > 0.2 ? "RUNNING" : "SYNC";
+
+    document.getElementById("uplink").textContent =
+        Math.random() > 0.15 ? "CONNECTED" : "SYNC";
+}
+
+function updateClock() {
+    const now = new Date();
+
+    const time =
+        now.getHours().toString().padStart(2, "0") +
+        ":" +
+        now.getMinutes().toString().padStart(2, "0") +
+        ":" +
+        now.getSeconds().toString().padStart(2, "0");
+
+    document.getElementById("clock").textContent = time;
+}
+
+function startTechnicalScreen() {
+    loadingBar.style.display = "none";
+    percentage.style.display = "none";
+    jargonContainer.style.display = "none";
+
+    const technicalScreen =
+        document.getElementById("technicalScreen");
+
+    technicalScreen.style.display = "block";
+
+    addTechnicalLine();
+
+    updateTechnicalValues();
+
+    setInterval(updateTechnicalValues, 700);
+
+    updateClock();
+    setInterval(updateClock, 1000);
 }
 
 let mediaStarted = false;
@@ -278,10 +566,14 @@ function playSpeechLoop() {
         alertTitle + "。 " + chineseText;
 
     const utteranceZH =
-        new SpeechSynthesisUtterance(fullChineseSpeech);
+        new SpeechSynthesisUtterance(
+            fullChineseSpeech
+        );
 
     const utteranceEN =
-        new SpeechSynthesisUtterance(englishText);
+        new SpeechSynthesisUtterance(
+            englishText
+        );
 
     utteranceZH.lang = "zh-CN";
     utteranceZH.rate = 0.85;
@@ -291,14 +583,21 @@ function playSpeechLoop() {
     utteranceEN.rate = 0.85;
     utteranceEN.volume = 1;
 
-    const voices = window.speechSynthesis.getVoices();
+    const voices =
+        window.speechSynthesis.getVoices();
 
     const chineseVoice = voices.find(
-        voice => voice.lang.toLowerCase().startsWith("zh")
+        voice =>
+            voice.lang
+                .toLowerCase()
+                .startsWith("zh")
     );
 
     const englishVoice = voices.find(
-        voice => voice.lang.toLowerCase().startsWith("en")
+        voice =>
+            voice.lang
+                .toLowerCase()
+                .startsWith("en")
     );
 
     if (chineseVoice) {
@@ -316,7 +615,9 @@ function playSpeechLoop() {
 
     utteranceZH.onend = function() {
         setTimeout(function() {
-            window.speechSynthesis.speak(utteranceEN);
+            window.speechSynthesis.speak(
+                utteranceEN
+            );
         }, 200);
     };
 
@@ -327,15 +628,24 @@ function playSpeechLoop() {
     };
 
     utteranceZH.onerror = function(event) {
-        console.error("Chinese speech error:", event);
+        console.error(
+            "Chinese speech error:",
+            event
+        );
     };
 
     utteranceEN.onerror = function(event) {
-        console.error("English speech error:", event);
+        console.error(
+            "English speech error:",
+            event
+        );
     };
 
     window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utteranceZH);
+
+    window.speechSynthesis.speak(
+        utteranceZH
+    );
 }
 
 async function startMedia() {
@@ -348,7 +658,10 @@ async function startMedia() {
             await document.documentElement.requestFullscreen();
         }
     } catch (e) {
-        console.log("Fullscreen request failed:", e);
+        console.log(
+            "Fullscreen request failed:",
+            e
+        );
     }
 
     const siren =
@@ -364,9 +677,11 @@ async function startMedia() {
 
     try {
         await siren.play();
-        console.log("Siren started");
     } catch (e) {
-        console.error("Siren failed:", e);
+        console.error(
+            "Siren failed:",
+            e
+        );
     }
 
     setTimeout(async function() {
@@ -374,9 +689,11 @@ async function startMedia() {
 
         try {
             await music.play();
-            console.log("Music started");
         } catch (e) {
-            console.error("Music failed:", e);
+            console.error(
+                "Music failed:",
+                e
+            );
         }
     }, 100);
 
@@ -384,7 +701,8 @@ async function startMedia() {
         if ("speechSynthesis" in window) {
             window.speechSynthesis.cancel();
 
-            const voices = window.speechSynthesis.getVoices();
+            const voices =
+                window.speechSynthesis.getVoices();
 
             if (voices.length > 0) {
                 playSpeechLoop();
@@ -419,3 +737,4 @@ window.onload = function() {
 
 </body>
 </html>
+```
