@@ -648,72 +648,45 @@ function playSpeechLoop() {
 }
 
 async function startMedia() {
-    if (mediaStarted) return;
-
-    mediaStarted = true;
-
+    // Fullscreen must be requested directly from the mouse click
     try {
-        if (document.documentElement.requestFullscreen) {
+        if (!document.fullscreenElement) {
             await document.documentElement.requestFullscreen();
         }
-    } catch (e) {
-        console.log(
-            "Fullscreen request failed:",
-            e
-        );
+    } catch (error) {
+        console.log("Fullscreen blocked:", error);
     }
 
-    const siren =
-        document.getElementById("sirenSound");
-
-    const music =
-        document.getElementById("loopMusic");
-
-    siren.load();
-    music.load();
-
-    siren.volume = 0.05;
-
+    // Start siren
     try {
-        await siren.play();
-    } catch (e) {
-        console.error(
-            "Siren failed:",
-            e
-        );
+        sirenSound.volume = 0.05;
+        await sirenSound.play();
+    } catch (error) {
+        console.log("Siren playback blocked:", error);
     }
 
-    setTimeout(async function() {
-        music.volume = 1.0;
+    // Start music
+    try {
+        loopMusic.volume = 1.0;
+        await loopMusic.play();
+    } catch (error) {
+        console.log("Music playback blocked:", error);
+    }
 
-        try {
-            await music.play();
-        } catch (e) {
-            console.error(
-                "Music failed:",
-                e
-            );
-        }
-    }, 100);
+    // Start speech
+    if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
 
-    setTimeout(function() {
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(
+            "System error. Critical system failure detected."
+        );
 
-            const voices =
-                window.speechSynthesis.getVoices();
+        utterance.lang = "en-US";
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
 
-            if (voices.length > 0) {
-                playSpeechLoop();
-            } else {
-                window.speechSynthesis.onvoiceschanged =
-                    function() {
-                        window.speechSynthesis.onvoiceschanged = null;
-                        playSpeechLoop();
-                    };
-            }
-        }
-    }, 300);
+        speechSynthesis.speak(utterance);
+    }
 }
 
 window.onload = function() {
