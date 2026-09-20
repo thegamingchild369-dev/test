@@ -648,45 +648,72 @@ function playSpeechLoop() {
 }
 
 async function startMedia() {
-    // Fullscreen must be requested directly from the mouse click
+    if (mediaStarted) return;
+
+    mediaStarted = true;
+
     try {
-        if (!document.fullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
             await document.documentElement.requestFullscreen();
         }
-    } catch (error) {
-        console.log("Fullscreen blocked:", error);
-    }
-
-    // Start siren
-    try {
-        sirenSound.volume = 0.05;
-        await sirenSound.play();
-    } catch (error) {
-        console.log("Siren playback blocked:", error);
-    }
-
-    // Start music
-    try {
-        loopMusic.volume = 1.0;
-        await loopMusic.play();
-    } catch (error) {
-        console.log("Music playback blocked:", error);
-    }
-
-    // Start speech
-    if ("speechSynthesis" in window) {
-        speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(
-            "System error. Critical system failure detected."
+    } catch (e) {
+        console.log(
+            "Fullscreen request failed:",
+            e
         );
-
-        utterance.lang = "en-US";
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-
-        speechSynthesis.speak(utterance);
     }
+
+    const siren =
+        document.getElementById("sirenSound");
+
+    const music =
+        document.getElementById("loopMusic");
+
+    siren.load();
+    music.load();
+
+    siren.volume = 0.05;
+
+    try {
+        await siren.play();
+    } catch (e) {
+        console.error(
+            "Siren failed:",
+            e
+        );
+    }
+
+    setTimeout(async function() {
+        music.volume = 1.0;
+
+        try {
+            await music.play();
+        } catch (e) {
+            console.error(
+                "Music failed:",
+                e
+            );
+        }
+    }, 100);
+
+    setTimeout(function() {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+
+            const voices =
+                window.speechSynthesis.getVoices();
+
+            if (voices.length > 0) {
+                playSpeechLoop();
+            } else {
+                window.speechSynthesis.onvoiceschanged =
+                    function() {
+                        window.speechSynthesis.onvoiceschanged = null;
+                        playSpeechLoop();
+                    };
+            }
+        }
+    }, 300);
 }
 
 window.onload = function() {
