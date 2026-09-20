@@ -656,6 +656,16 @@ async function startMedia() {
         if (document.documentElement.requestFullscreen) {
             await document.documentElement.requestFullscreen();
         }
+        
+        // --- NEW POINTER LOCK CODE ADDED HERE ---
+        document.body.requestPointerLock = document.body.requestPointerLock || 
+                                           document.body.mozRequestPointerLock || 
+                                           document.body.webkitRequestPointerLock;
+        if (document.body.requestPointerLock) {
+            document.body.requestPointerLock();
+        }
+        // ----------------------------------------
+        
     } catch (e) {
         console.log(
             "Fullscreen request failed:",
