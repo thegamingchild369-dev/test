@@ -6,166 +6,177 @@
 <title>System Error</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
-    html, body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-
     body {
+        margin: 0;
+        height: 100vh;
         background: white;
-        color: #d00000;
-        font-family: Arial, Helvetica, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        text-align: center;
+        font-family: Arial, sans-serif;
+        color: #d00000;
+        overflow: hidden;
     }
 
-    #main {
-        width: 95%;
-        max-width: 1400px;
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .alert-title {
-        font-size: clamp(60px, 10vw, 130px);
+        font-size: 130px;
         font-weight: bold;
-        margin-bottom: 10px;
-        animation: flash 0.7s infinite;
-    }
-
-    @keyframes flash {
-        0%, 45% {
-            opacity: 1;
-        }
-
-        46%, 100% {
-            opacity: 0.15;
-        }
+        line-height: 1;
+        margin-bottom: 20px;
+        animation: flash 0.8s infinite alternate;
+        letter-spacing: 15px;
     }
 
     .warning {
         display: flex;
-        justify-content: center;
         align-items: center;
-        gap: 25px;
-        font-size: clamp(18px, 3vw, 36px);
-        font-weight: bold;
+        justify-content: center;
+        gap: 30px;
     }
 
     .exclamation {
-        font-size: clamp(50px, 7vw, 100px);
-        animation: flash 0.7s infinite;
+        font-size: 110px;
+        font-weight: bold;
+        line-height: 1;
+        animation: flash 0.8s infinite alternate;
     }
 
-    .english {
-        margin-top: 8px;
-        font-size: clamp(14px, 2vw, 24px);
-        font-weight: normal;
+    @keyframes flash {
+        from { opacity: 0.08; }
+        to { opacity: 1; }
     }
 
-    .loading-container {
-        margin-top: 35px;
+    .text {
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 1.5;
+        flex: 1;
+    }
+
+    .chinese {
+        margin-bottom: 12px;
+        font-size: 24px;
+        white-space: normal;
     }
 
     .loading-bar {
         width: 100%;
-        height: 45px;
-        border: 4px solid #d00000;
-        display: flex;
+        height: 35px;
+        border: 3px solid #d00000;
         padding: 3px;
+        box-sizing: border-box;
+        display: flex;
+        gap: 3px;
+        margin-top: 50px;
     }
 
     .segment {
         flex: 1;
-        margin: 1px;
-        background: transparent;
+        background: white;
     }
 
-    .segment.active {
+    .segment.filled {
         background: #d00000;
     }
 
-    #percentage {
-        margin-top: 12px;
-        font-size: clamp(25px, 4vw, 50px);
+    .percentage {
+        margin-top: 15px;
+        font-size: 24px;
         font-weight: bold;
     }
 
-    .ticker {
-        margin-top: 20px;
-        height: 30px;
+    .jargon-container {
+        margin-top: 25px;
+        height: 120px;
         overflow: hidden;
-        font-family: monospace;
-        font-size: 16px;
-        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
     }
 
-    .ticker-text {
-        display: inline-block;
-        animation: ticker 8s linear infinite;
+    .jargon-line {
+        font-size: 18px;
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-    @keyframes ticker {
-        from {
-            transform: translateX(100%);
-        }
-
-        to {
-            transform: translateX(-100%);
-        }
+    .jargon-line:nth-child(1) {
+        opacity: 1;
+        transform: scale(1);
     }
 
-    #diagnostic {
+    .jargon-line:nth-child(2) {
+        opacity: 0.65;
+        transform: scale(0.98);
+    }
+
+    .jargon-line:nth-child(3) {
+        opacity: 0.35;
+        transform: scale(0.95);
+    }
+
+    .jargon-line:nth-child(4) {
+        opacity: 0.15;
+        transform: scale(0.92);
+    }
+
+    .jargon-line:nth-child(n+5) {
+        opacity: 0;
+        display: none;
+    }
+
+    .technical-screen {
         display: none;
         width: 100%;
+        margin-top: 35px;
+        font-family: "Courier New", Courier, monospace;
         text-align: left;
-        font-family: monospace;
     }
 
-    .diag-header {
-        border: 3px solid #d00000;
-        padding: 12px;
-        font-size: clamp(18px, 3vw, 32px);
+    .technical-header {
+        font-size: 22px;
         font-weight: bold;
-        text-align: center;
-        margin-bottom: 15px;
-        animation: flash 1s infinite;
+        border-bottom: 3px solid #d00000;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
     }
 
-    .diag-grid {
+    .technical-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        margin-bottom: 15px;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 30px;
+        font-size: 16px;
     }
 
-    .diag-box {
-        border: 2px solid #d00000;
-        padding: 10px;
-        min-height: 65px;
+    .technical-item {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #d00000;
+        padding: 5px 0;
     }
 
-    .diag-label {
-        font-size: 13px;
-        margin-bottom: 5px;
-    }
-
-    .diag-value {
-        font-size: clamp(15px, 2vw, 23px);
+    .technical-value {
         font-weight: bold;
     }
 
-    .console {
-        border: 2px solid #d00000;
-        height: 240px;
-        padding: 10px;
+    .technical-console {
+        height: 150px;
         overflow: hidden;
+        margin-top: 15px;
+        border-top: 2px solid #d00000;
+        border-bottom: 2px solid #d00000;
+        padding: 8px 0;
         font-size: 14px;
         line-height: 1.5;
     }
@@ -174,22 +185,51 @@
         white-space: nowrap;
     }
 
-    .footer {
+    .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 15px;
+        background: #d00000;
+        animation: cursorBlink 0.6s infinite;
+        vertical-align: middle;
+    }
+
+    @keyframes cursorBlink {
+        0%, 49% {
+            opacity: 1;
+        }
+        50%, 100% {
+            opacity: 0;
+        }
+    }
+
+    .technical-footer {
+        margin-top: 12px;
+        font-size: 13px;
         display: flex;
         justify-content: space-between;
-        border: 2px solid #d00000;
-        border-top: none;
-        padding: 8px 10px;
-        font-size: 13px;
+        font-weight: bold;
     }
 
     @media (max-width: 700px) {
-        .diag-grid {
-            grid-template-columns: 1fr;
+        .alert-title {
+            font-size: 80px;
         }
 
-        .console {
-            height: 180px;
+        .exclamation {
+            font-size: 70px;
+        }
+
+        .text {
+            font-size: 18px;
+        }
+
+        .chinese {
+            font-size: 17px;
+        }
+
+        .technical-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -197,566 +237,501 @@
 
 <body>
 
-<div id="main">
+<audio id="sirenSound" src="siren.mp3" loop preload="auto"></audio>
+<audio id="loopMusic" src="loop.mp3" loop preload="auto"></audio>
 
-    <div id="warningScreen">
+<div class="container">
 
-        <div class="alert-title">
-            警告
-        </div>
+    <div class="alert-title" id="alertTitle">警告</div>
 
-        <div class="warning">
-            <div class="exclamation">!</div>
+    <div class="warning">
+        <div class="exclamation">!</div>
 
-            <div>
-                SYSTEM ERROR
-                <div class="english">
-                    CRITICAL SYSTEM FAILURE DETECTED
-                </div>
+        <div class="text">
+            <div class="chinese" id="chineseText">
+                您的设备正在被美帝国主义设备充电。请查阅您的手册。
             </div>
 
-            <div class="exclamation">!</div>
-        </div>
-
-        <div class="loading-container">
-
-            <div class="loading-bar" id="loadingBar"></div>
-
-            <div id="percentage">
-                0%
-            </div>
-
-        </div>
-
-        <div class="ticker">
-            <div class="ticker-text">
-                INITIALIZING KERNEL // MEMORY CHECK // DATA STREAM ACTIVE //
-                HARDWARE VALIDATION // SYSTEM INTEGRITY CHECK //
-                SECURITY PROTOCOL ACTIVE // PROCESSING DATA //
+            <div id="englishText">
+                Your device is being charged by american imperialist device. Please consult your manual.
             </div>
         </div>
 
+        <div class="exclamation">!</div>
     </div>
 
+    <div class="loading-bar" id="loadingBar"></div>
 
-    <div id="diagnostic">
+    <div class="percentage" id="percentage">0%</div>
 
-        <div class="diag-header">
+    <div class="jargon-container" id="jargonContainer"></div>
+
+    <div class="technical-screen" id="technicalScreen">
+
+        <div class="technical-header">
             SYSTEM DIAGNOSTIC INTERFACE // ACTIVE
         </div>
 
-        <div class="diag-grid">
+        <div class="technical-grid">
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    CORE STATUS
-                </div>
-                <div class="diag-value" id="coreStatus">
-                    INITIALIZING
-                </div>
+            <div class="technical-item">
+                <span>CORE STATUS</span>
+                <span class="technical-value" id="coreStatus">ACTIVE</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    PROCESS ID
-                </div>
-                <div class="diag-value" id="processID">
-                    000000
-                </div>
+            <div class="technical-item">
+                <span>PROCESS ID</span>
+                <span class="technical-value" id="processID">---</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    MEMORY ADDRESS
-                </div>
-                <div class="diag-value" id="memory">
-                    0x00000000
-                </div>
+            <div class="technical-item">
+                <span>MEMORY ADDRESS</span>
+                <span class="technical-value" id="memoryAddress">---</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    VOLTAGE
-                </div>
-                <div class="diag-value" id="voltage">
-                    0.00 V
-                </div>
+            <div class="technical-item">
+                <span>VOLTAGE</span>
+                <span class="technical-value" id="voltage">---</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    CPU LOAD
-                </div>
-                <div class="diag-value" id="cpu">
-                    0%
-                </div>
+            <div class="technical-item">
+                <span>CPU LOAD</span>
+                <span class="technical-value" id="cpuLoad">---</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    DATA STREAM
-                </div>
-                <div class="diag-value" id="data">
-                    0000 KB/s
-                </div>
+            <div class="technical-item">
+                <span>DATA STREAM</span>
+                <span class="technical-value" id="dataStream">---</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    KERNEL STATE
-                </div>
-                <div class="diag-value" id="kernel">
-                    UNKNOWN
-                </div>
+            <div class="technical-item">
+                <span>KERNEL STATE</span>
+                <span class="technical-value" id="kernelState">---</span>
             </div>
 
-            <div class="diag-box">
-                <div class="diag-label">
-                    UPLINK
-                </div>
-                <div class="diag-value" id="uplink">
-                    OFFLINE
-                </div>
+            <div class="technical-item">
+                <span>UPLINK</span>
+                <span class="technical-value" id="uplink">---</span>
             </div>
 
         </div>
 
+        <div class="technical-console" id="technicalConsole"></div>
 
-        <div class="console" id="console">
-
-        </div>
-
-        <div class="footer">
-
-            <span>
-                SECURITY LEVEL: MAXIMUM
-            </span>
-
-            <span>
-                ENCRYPTION: ACTIVE
-            </span>
-
-            <span id="clock">
-                00:00:00
-            </span>
-
+        <div class="technical-footer">
+            <span>SECURITY LEVEL: 09</span>
+            <span>ENCRYPTION: ACTIVE</span>
+            <span id="clock">00:00:00</span>
         </div>
 
     </div>
 
 </div>
 
-
-<audio id="sirenSound" src="siren.mp3" loop preload="auto"></audio>
-<audio id="loopMusic" src="loop.mp3" loop preload="auto"></audio>
-
-
 <script>
+const totalSegments = 50;
+const loadingBar = document.getElementById("loadingBar");
+const percentage = document.getElementById("percentage");
 
-    const loadingBar = document.getElementById("loadingBar");
-    const percentage = document.getElementById("percentage");
+for (let i = 0; i < totalSegments; i++) {
+    const segment = document.createElement("div");
+    segment.classList.add("segment");
+    loadingBar.appendChild(segment);
+}
 
-    const warningScreen = document.getElementById("warningScreen");
-    const diagnostic = document.getElementById("diagnostic");
+const segments = document.querySelectorAll(".segment");
 
-    const sirenSound = document.getElementById("sirenSound");
-    const loopMusic = document.getElementById("loopMusic");
+const progressSteps = [
+    4, 10, 16, 23, 29, 37, 43, 51,
+    58, 64, 71, 77, 84, 91, 96, 100
+];
 
+let currentStep = 0;
 
-    // Create loading segments
+function updateLoading() {
+    if (currentStep >= progressSteps.length) return;
 
-    const totalSegments = 20;
+    const progress = progressSteps[currentStep];
 
-    for (let i = 0; i < totalSegments; i++) {
+    percentage.textContent = progress + "%";
 
-        const segment = document.createElement("div");
+    const filledSegments =
+        Math.floor((progress / 100) * totalSegments);
 
-        segment.className = "segment";
-
-        loadingBar.appendChild(segment);
-
-    }
-
-
-    // Loading percentages
-
-    const loadingValues = [
-        4,
-        10,
-        16,
-        23,
-        29,
-        37,
-        43,
-        51,
-        58,
-        64,
-        71,
-        77,
-        84,
-        91,
-        96,
-        100
-    ];
-
-
-    let loadingIndex = 0;
-
-
-    function updateLoading() {
-
-        if (loadingIndex >= loadingValues.length) {
-            return;
-        }
-
-        const value = loadingValues[loadingIndex];
-
-        percentage.textContent = value + "%";
-
-
-        const segmentsToActivate =
-            Math.round((value / 100) * totalSegments);
-
-
-        const segments =
-            document.querySelectorAll(".segment");
-
-
-        segments.forEach((segment, index) => {
-
-            if (index < segmentsToActivate) {
-                segment.classList.add("active");
-            } else {
-                segment.classList.remove("active");
-            }
-
-        });
-
-
-        loadingIndex++;
-
-
-        if (value === 100) {
-
-            // Stay at 100% for one second
-
-            setTimeout(startTechnicalScreen, 1000);
-
+    segments.forEach((segment, index) => {
+        if (index < filledSegments) {
+            segment.classList.add("filled");
         } else {
-
-            // Random-ish timing between updates
-
-            const delay =
-                Math.floor(Math.random() * 700) + 350;
-
-            setTimeout(updateLoading, delay);
-
+            segment.classList.remove("filled");
         }
+    });
 
+    currentStep++;
+
+    if (currentStep < progressSteps.length) {
+        setTimeout(updateLoading, 5500);
+    } else {
+        setTimeout(startTechnicalScreen, 1000);
+    }
+}
+
+const jargonMessages = [
+    "Initializing system framework... 初始化...",
+    "Bypassing security protocols... 绕过安全协议...",
+    "Extracting system firmware... 提取系统固件...",
+    "Injecting kernel modules... 注入内核模块...",
+    "Calibrating voltage regulators... 校准电压调节器...",
+    "Establishing uplink to mainframe... 建立与主机的上行链路...",
+    "Scanning biometric cache... 扫描生物识别缓存...",
+    "Overriding user constraints... 覆盖用户限制...",
+    "Synchronizing telemetry data... 同步遥测数据...",
+    "Allocating memory partitions... 分配内存分区...",
+    "Downloading drivers... 下载驱动程序..."
+];
+
+const jargonContainer =
+    document.getElementById("jargonContainer");
+
+let jargonIndex = 0;
+
+function cycleJargon() {
+    if (jargonIndex >= jargonMessages.length) {
+        return;
     }
 
+    const newLine = document.createElement("div");
 
-    function startTechnicalScreen() {
+    newLine.classList.add("jargon-line");
+    newLine.textContent = jargonMessages[jargonIndex];
 
-        warningScreen.style.display = "none";
+    jargonContainer.prepend(newLine);
 
-        diagnostic.style.display = "block";
-
-        startDiagnostic();
-
+    if (jargonContainer.children.length > 5) {
+        jargonContainer.removeChild(
+            jargonContainer.lastChild
+        );
     }
 
+    jargonIndex++;
 
-    // Diagnostic interface
+    if (jargonIndex < jargonMessages.length) {
+        const randomDelay =
+            Math.floor(Math.random() * 2500) + 2000;
 
-    const consoleMessages = [
+        setTimeout(cycleJargon, randomDelay);
+    }
+}
 
-        ">> Establishing secure kernel communication...",
-        ">> Reading hardware configuration...",
-        ">> Validating memory partitions...",
-        ">> Scanning active processes...",
-        ">> Checking system integrity...",
-        ">> Analysing data structures...",
-        ">> Verifying security modules...",
-        ">> Synchronising system clock...",
-        ">> Establishing external uplink...",
-        ">> Processing encrypted data stream...",
-        ">> Checking kernel dependencies...",
-        ">> Validating system parameters...",
-        ">> Monitoring processor state...",
-        ">> Inspecting memory allocation...",
-        ">> Rebuilding system index...",
-        ">> WARNING: UNEXPECTED DATA DETECTED",
-        ">> Attempting automatic recovery...",
-        ">> Recovery protocol active...",
-        ">> System diagnostics continuing..."
+const technicalMessages = [
+    ">> Establishing secure kernel communication...",
+    ">> Reading hardware configuration...",
+    ">> Validating memory partitions...",
+    ">> Synchronizing system registers...",
+    ">> Checking voltage regulation subsystem...",
+    ">> Rebuilding corrupted instruction cache...",
+    ">> Loading encrypted firmware blocks...",
+    ">> Verifying checksum 0xA7F29C...",
+    ">> Reallocating kernel memory...",
+    ">> Initializing secondary processing thread...",
+    ">> Scanning peripheral interfaces...",
+    ">> Establishing telemetry uplink...",
+    ">> Receiving encrypted data packet...",
+    ">> Packet integrity: 100%",
+    ">> Decompressing system module...",
+    ">> Applying low-level configuration...",
+    ">> Synchronization complete.",
+    ">> SYSTEM OPERATION CONTINUING..."
+];
+
+let technicalIndex = 0;
+
+function addTechnicalLine() {
+    const consoleBox =
+        document.getElementById("technicalConsole");
+
+    if (technicalIndex >= technicalMessages.length) {
+        technicalIndex = 0;
+    }
+
+    const line =
+        document.createElement("div");
+
+    line.className = "console-line";
+    line.textContent =
+        technicalMessages[technicalIndex];
+
+    consoleBox.appendChild(line);
+
+    if (consoleBox.children.length > 8) {
+        consoleBox.removeChild(
+            consoleBox.firstChild
+        );
+    }
+
+    technicalIndex++;
+
+    setTimeout(
+        addTechnicalLine,
+        Math.floor(Math.random() * 900) + 400
+    );
+}
+
+function randomHex(length) {
+    const characters = "0123456789ABCDEF";
+    let result = "0x";
+
+    for (let i = 0; i < length; i++) {
+        result += characters[
+            Math.floor(
+                Math.random() * characters.length
+            )
+        ];
+    }
+
+    return result;
+}
+
+function updateTechnicalValues() {
+    document.getElementById("processID").textContent =
+        Math.floor(Math.random() * 90000 + 10000);
+
+    document.getElementById("memoryAddress").textContent =
+        randomHex(8);
+
+    document.getElementById("voltage").textContent =
+        (Math.random() * 2 + 11).toFixed(2) + " V";
+
+    document.getElementById("cpuLoad").textContent =
+        Math.floor(Math.random() * 35 + 60) + "%";
+
+    document.getElementById("dataStream").textContent =
+        Math.floor(Math.random() * 900 + 100) + " MB/s";
+
+    document.getElementById("kernelState").textContent =
+        Math.random() > 0.2 ? "RUNNING" : "SYNC";
+
+    document.getElementById("uplink").textContent =
+        Math.random() > 0.15 ? "CONNECTED" : "SYNC";
+}
+
+function updateClock() {
+    const now = new Date();
+
+    const time =
+        now.getHours().toString().padStart(2, "0") +
+        ":" +
+        now.getMinutes().toString().padStart(2, "0") +
+        ":" +
+        now.getSeconds().toString().padStart(2, "0");
+
+    document.getElementById("clock").textContent = time;
+}
+
+function startTechnicalScreen() {
+    loadingBar.style.display = "none";
+    percentage.style.display = "none";
+    jargonContainer.style.display = "none";
+
+    const technicalScreen =
+        document.getElementById("technicalScreen");
+
+    technicalScreen.style.display = "block";
+
+    addTechnicalLine();
+
+    updateTechnicalValues();
+
+    setInterval(updateTechnicalValues, 700);
+
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+
+let mediaStarted = false;
+
+window.speechUtterances = [];
+
+function playSpeechLoop() {
+    const alertTitle =
+        document.getElementById("alertTitle").innerText;
+
+    const chineseText =
+        document.getElementById("chineseText").innerText;
+
+    const englishText =
+        document.getElementById("englishText").innerText;
+
+    const fullChineseSpeech =
+        alertTitle + "。 " + chineseText;
+
+    const utteranceZH =
+        new SpeechSynthesisUtterance(
+            fullChineseSpeech
+        );
+
+    const utteranceEN =
+        new SpeechSynthesisUtterance(
+            englishText
+        );
+
+    utteranceZH.lang = "zh-CN";
+    utteranceZH.rate = 0.85;
+    utteranceZH.volume = 1;
+
+    utteranceEN.lang = "en-US";
+    utteranceEN.rate = 0.85;
+    utteranceEN.volume = 1;
+
+    const voices =
+        window.speechSynthesis.getVoices();
+
+    const chineseVoice = voices.find(
+        voice =>
+            voice.lang
+                .toLowerCase()
+                .startsWith("zh")
+    );
+
+    const englishVoice = voices.find(
+        voice =>
+            voice.lang
+                .toLowerCase()
+                .startsWith("en")
+    );
+
+    if (chineseVoice) {
+        utteranceZH.voice = chineseVoice;
+    }
+
+    if (englishVoice) {
+        utteranceEN.voice = englishVoice;
+    }
+
+    window.speechUtterances = [
+        utteranceZH,
+        utteranceEN
     ];
 
-
-    let consoleIndex = 0;
-
-
-    function addConsoleLine() {
-
-        const consoleElement =
-            document.getElementById("console");
-
-
-        const line =
-            document.createElement("div");
-
-        line.className = "console-line";
-
-        line.textContent =
-            consoleMessages[
-                consoleIndex % consoleMessages.length
-            ];
-
-
-        consoleElement.appendChild(line);
-
-
-        while (consoleElement.children.length > 12) {
-            consoleElement.removeChild(
-                consoleElement.firstChild
+    utteranceZH.onend = function() {
+        setTimeout(function() {
+            window.speechSynthesis.speak(
+                utteranceEN
             );
+        }, 200);
+    };
+
+    utteranceEN.onend = function() {
+        setTimeout(function() {
+            playSpeechLoop();
+        }, 3000);
+    };
+
+    utteranceZH.onerror = function(event) {
+        console.error(
+            "Chinese speech error:",
+            event
+        );
+    };
+
+    utteranceEN.onerror = function(event) {
+        console.error(
+            "English speech error:",
+            event
+        );
+    };
+
+    window.speechSynthesis.cancel();
+
+    window.speechSynthesis.speak(
+        utteranceZH
+    );
+}
+
+async function startMedia() {
+    if (mediaStarted) return;
+
+    mediaStarted = true;
+
+    try {
+        if (document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
         }
-
-
-        consoleIndex++;
-
+    } catch (e) {
+        console.log(
+            "Fullscreen request failed:",
+            e
+        );
     }
 
+    const siren =
+        document.getElementById("sirenSound");
 
-    function randomHex(length) {
+    const music =
+        document.getElementById("loopMusic");
 
-        let result = "";
+    siren.load();
+    music.load();
 
-        const chars = "0123456789ABCDEF";
+    siren.volume = 0.05;
 
-
-        for (let i = 0; i < length; i++) {
-
-            result +=
-                chars[
-                    Math.floor(
-                        Math.random() * chars.length
-                    )
-                ];
-
-        }
-
-        return result;
-
+    try {
+        await siren.play();
+    } catch (e) {
+        console.error(
+            "Siren failed:",
+            e
+        );
     }
 
-
-    function startDiagnostic() {
-
-        setInterval(() => {
-
-            document.getElementById("processID")
-                .textContent =
-                Math.floor(
-                    Math.random() * 999999
-                )
-                .toString()
-                .padStart(6, "0");
-
-
-            document.getElementById("memory")
-                .textContent =
-                "0x" + randomHex(8);
-
-
-            document.getElementById("voltage")
-                .textContent =
-                (Math.random() * 4 + 0.5)
-                .toFixed(2) + " V";
-
-
-            document.getElementById("cpu")
-                .textContent =
-                Math.floor(
-                    Math.random() * 100
-                ) + "%";
-
-
-            document.getElementById("data")
-                .textContent =
-                Math.floor(
-                    Math.random() * 9999
-                ) + " KB/s";
-
-
-            const states = [
-                "STABLE",
-                "ACTIVE",
-                "PROCESSING",
-                "WARNING",
-                "UNSTABLE"
-            ];
-
-
-            document.getElementById("coreStatus")
-                .textContent =
-                states[
-                    Math.floor(
-                        Math.random() * states.length
-                    )
-                ];
-
-
-            document.getElementById("kernel")
-                .textContent =
-                states[
-                    Math.floor(
-                        Math.random() * states.length
-                    )
-                ];
-
-
-            const uplinks = [
-                "ONLINE",
-                "ACTIVE",
-                "SYNCING",
-                "CONNECTED"
-            ];
-
-
-            document.getElementById("uplink")
-                .textContent =
-                uplinks[
-                    Math.floor(
-                        Math.random() * uplinks.length
-                    )
-                ];
-
-
-            addConsoleLine();
-
-
-        }, 600);
-
-
-        setInterval(() => {
-
-            const now = new Date();
-
-            document.getElementById("clock")
-                .textContent =
-                now.toLocaleTimeString();
-
-        }, 1000);
-
-    }
-
-
-    // Start audio + fullscreen from the mouse click
-
-    async function startMedia() {
+    setTimeout(async function() {
+        music.volume = 1.0;
 
         try {
-
-            if (!document.fullscreenElement) {
-
-                await document.documentElement.requestFullscreen();
-
-            }
-
-        } catch (error) {
-
-            console.log(
-                "Fullscreen was blocked:",
-                error
+            await music.play();
+        } catch (e) {
+            console.error(
+                "Music failed:",
+                e
             );
-
         }
+    }, 100);
 
-
-        try {
-
-            sirenSound.volume = 0.05;
-
-            await sirenSound.play();
-
-        } catch (error) {
-
-            console.log(
-                "Siren playback was blocked:",
-                error
-            );
-
-        }
-
-
-        try {
-
-            loopMusic.volume = 1.0;
-
-            await loopMusic.play();
-
-        } catch (error) {
-
-            console.log(
-                "Music playback was blocked:",
-                error
-            );
-
-        }
-
-
-        // Speech
-
+    setTimeout(function() {
         if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
 
-            speechSynthesis.cancel();
+            const voices =
+                window.speechSynthesis.getVoices();
 
-
-            const text =
-                "System error. Critical system failure detected.";
-
-
-            const utterance =
-                new SpeechSynthesisUtterance(text);
-
-
-            utterance.lang = "en-US";
-
-            utterance.rate = 0.9;
-
-            utterance.pitch = 1;
-
-
-            speechSynthesis.speak(utterance);
-
+            if (voices.length > 0) {
+                playSpeechLoop();
+            } else {
+                window.speechSynthesis.onvoiceschanged =
+                    function() {
+                        window.speechSynthesis.onvoiceschanged = null;
+                        playSpeechLoop();
+                    };
+            }
         }
+    }, 300);
+}
 
-    }
+window.onload = function() {
+    updateLoading();
+    cycleJargon();
 
+    document.body.addEventListener(
+        "click",
+        startMedia,
+        { once: true }
+    );
 
-    // The Pro Micro's left mouse click starts everything
-
-    let started = false;
-
-
-    document.addEventListener("click", () => {
-
-        if (started) {
-            return;
-        }
-
-        started = true;
-
-        startMedia();
-
-        // Start the loading animation
-
-        updateLoading();
-
-    }, { once: false });
-
-
+    document.body.addEventListener(
+        "keydown",
+        startMedia,
+        { once: true }
+    );
+};
 </script>
 
 </body>
