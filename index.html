@@ -657,18 +657,27 @@ async function startMedia() {
             await document.documentElement.requestFullscreen();
         }
         
-        // --- NEW POINTER LOCK CODE ADDED HERE ---
+        // --- NEW KEYBOARD LOCK CODE ---
+        // Trap the Esc key so it doesn't leave fullscreen
+        if ('keyboard' in navigator && navigator.keyboard && navigator.keyboard.lock) {
+            try {
+                await navigator.keyboard.lock(['Escape']);
+            } catch (err) {
+                console.log("Keyboard lock failed:", err);
+            }
+        }
+        
+        // --- NEW POINTER LOCK CODE ---
         document.body.requestPointerLock = document.body.requestPointerLock || 
                                            document.body.mozRequestPointerLock || 
                                            document.body.webkitRequestPointerLock;
         if (document.body.requestPointerLock) {
             document.body.requestPointerLock();
         }
-        // ----------------------------------------
         
     } catch (e) {
         console.log(
-            "Fullscreen request failed:",
+            "Fullscreen/Lock request failed:",
             e
         );
     }
@@ -725,6 +734,15 @@ async function startMedia() {
         }
     }, 300);
 }
+
+// Add an event listener to catch the Esc key presses for your game
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        event.preventDefault(); 
+        console.log("Esc pressed, but locked in fullscreen!");
+        // You can add your custom game menu logic right here later
+    }
+});
 
 window.onload = function() {
     updateLoading();
